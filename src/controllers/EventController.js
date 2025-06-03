@@ -3,7 +3,7 @@ const User = require('../models/User')
 
 module.exports = {
   async createEvent(req, res) {
-    const { title, description, price } = req.body;
+    const { title, description, price, sport } = req.body;
     // deconstructed variable must match received headers.
       // Ex. userId was undefined because userid was recieved in headers
     const { user_id } = req.headers;
@@ -18,6 +18,7 @@ module.exports = {
     const event = await Event.create({
       title,
       description,
+      sport,
       price: parseFloat(price),
       user: user_id,
       thumbnail: filename
@@ -26,18 +27,15 @@ module.exports = {
     return res.json(event);
   },
 
-  async getEventById(req, res) {
+  async deleteEvent(req, res) {
     const { eventId } = req.params;
 
     try {
-      const event = await Event.findById(eventId);
-      return res.json(event)
+      await Event.findByIdAndDelete(eventId)
+      return res.status(204).send()
+
     } catch (error) {
-      
-      res.status(400).json({
-        message:
-          'Event does not exist. Would you like to create a new event?'
-      })
+      res.status(400).json({ message: 'No event with the provided ID'})
     }
   }
 }
