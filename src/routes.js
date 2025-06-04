@@ -5,6 +5,9 @@ const UserController = require('./controllers/UserController')
 const EventController = require('./controllers/EventController')
 const DashboardController = require('./controllers/DashboardController')
 const LoginController = require('./controllers/LoginController')
+const RegistrationContoller = require('./controllers/RegistrationController')
+const ApprovalContoller = require('./controllers/ApprovalController')
+const RejectionContoller = require('./controllers/RejectionController')
 const uploadConfig = require('./config/upload')
 
 const routes = express.Router();
@@ -15,8 +18,16 @@ routes.get('/status', (req, res) => {
 })
 
 // TODO: SubscribeController
-// TODO: ApprovalController
-// TODO: RejectionContoller
+
+// TODO: get registration by ID (registrationController)
+// TODO: registration ApprovalController
+// TODO: registration RejectionContoller
+
+// Registration
+routes.post('/registration/:eventId', RegistrationContoller.create)
+routes.post('/registration/:registration_id/approvals', ApprovalContoller.approval)
+routes.post('/registration/:registration_id/rejections', RejectionContoller.rejection)
+routes.get('/registration/:registration_id', RegistrationContoller.getRegistration)
 
 //Login
 routes.post('/login', LoginController.store)
