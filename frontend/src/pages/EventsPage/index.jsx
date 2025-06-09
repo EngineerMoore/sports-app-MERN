@@ -1,9 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
-import figure from 'react-bootstrap/Figure';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/esm/Container';
+import { Container, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
 import cameraIcon from '../../assets/camera.png'
 import './event.css'
 
@@ -25,40 +23,44 @@ const EventsPage = () => {
     return ''
   }
   return (
-    <Container>
-      <h1>Create Your Event</h1>
-      <Form onSubmit={ submitHandler }>
-        <Form.Group className={`thumbnail-container ${thumbnail ? 'has-thumbnail' : ''}`} controlId="thumbnail">
-          <Form.Label id="preview-thumbnail" style={{backgroundImage: `url(${preview})`}}></Form.Label>
-          <Form.Label>Upload Image: </Form.Label>
-          <Form.Control type="file"  onChange={(e) => setThumbnail(e.target.files[0])}/>
-          <figure.Image
-            width={50}
-            alt='upload icon image'
-            src={cameraIcon}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="sport">
-          <Form.Label>Sport: </Form.Label>
-          <Form.Control type="text" value={sport} placeholder={'Sport name'} onChange={(e) => setSport(e.target.value)}/>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="title">
-          <Form.Label>Title: </Form.Label>
-          <Form.Control type="text" value={title} placeholder={'Event Title'} onChange={(e) => setTitle(e.target.value)}/>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="description">
-          <Form.Label>Description: </Form.Label>
-          <Form.Control type="text" value={description} placeholder={'Event Description'} onChange={(e) => setDescription(e.target.value)}/>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="price">
-          <Form.Label>Price: </Form.Label>
-          <Form.Control type="text" value={price} placeholder={'Event Price'} onChange={(e) => setPrice(e.target.value)}/>
-        </Form.Group>
-        <Button>
-          Create Event
-        </Button>
-      </Form>
-    </Container>
+        <Container>
+            <h2>Create your Event</h2>
+            <Form onSubmit={submitHandler}>
+                <FormGroup>
+                    <Label>Upload Image: </Label>
+                    <Label id='thumbnail' style={{ backgroundImage: `url(${preview})` }} className={thumbnail ? 'has-thumbnail' : ''}>
+                        <Input type="file" onChange={evt => setThumbnail(evt.target.files[0])} />
+                        <img src={cameraIcon} style={{ maxWidth: "50px" }} alt="upload icon image" />
+                    </Label>
+                </FormGroup>
+                <FormGroup>
+                    <Label>Sport: </Label>
+                    <Input id="sport" type="text" value={sport} placeholder={'Sport name'} onChange={(evt) => setSport(evt.target.value)} />
+                </FormGroup>
+                <FormGroup>
+                    <Label>Title: </Label>
+                    <Input id="title" type="text" value={title} placeholder={'Event Title'} onChange={(evt) => setTitle(evt.target.value)} />
+                </FormGroup>
+                <FormGroup>
+                    <Label>Event description: </Label>
+                    <Input id="description" type="text" value={description} placeholder={'Event Description'} onChange={(evt) => setDescription(evt.target.value)} />
+                </FormGroup>
+                <FormGroup>
+                    <Label>Event price: </Label>
+                    <Input id="price" type="text" value={price} placeholder={'Event Price £0.00'} onChange={(evt) => setPrice(evt.target.value)} />
+                </FormGroup>
+                <FormGroup>
+                    <Label>Event date: </Label>
+                    <Input id="date" type="date" value={date} placeholder={'Event Price £0.00'} onChange={(evt) => setDate(evt.target.value)} />
+                </FormGroup>
+                <Button type="submit">
+                    Create Event
+                </Button>
+            </Form>
+            {/* {errorMessage ? (
+                <Alert className="event-validation" color="danger"> Missing required information</Alert>
+            ) : ""} */}
+        </Container>
   )
 }
 

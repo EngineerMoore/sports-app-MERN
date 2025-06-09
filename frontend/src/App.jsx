@@ -1,7 +1,7 @@
 import './App.css'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
-import Container from 'react-bootstrap/Container'
+import { Container } from 'reactstrap'
 import { Routes, Route } from 'react-router-dom'
 import Register from './pages/Register'
 import EventsPage from './pages/EventsPage'

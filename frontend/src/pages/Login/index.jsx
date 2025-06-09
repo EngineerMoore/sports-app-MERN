@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Container, Form, FormGroup, Input } from 'reactstrap';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/esm/Container';
 
 const Login = () => {
   const [ email, setEmail ] = useState('');
@@ -40,28 +39,19 @@ const Login = () => {
 
   return (
     <Container>
-      <h2>Login</h2>
-      <p>Please <strong>Login</strong> to your account</p>
-      <Form onSubmit={ handleSubmit }>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </Form>
+        <h2>Login:</h2>
+        <p>Please <strong>Login</strong> into your account</p>
+        <Form onSubmit={handleSubmit}>
+            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                <Input type="email" name="email" id="email" placeholder="Your email" onChange={evt => setEmail(evt.target.value)} />
+            </FormGroup>
+            <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                <Input type="password" name="password" id="password" placeholder="Your password" onChange={evt => setPassword(evt.target.value)} />
+            </FormGroup>
+            <Button>
+              Submit
+            </Button>
+        </Form>
     </Container>
   )
 }
