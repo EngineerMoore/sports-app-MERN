@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Container from 'react-bootstrap/Container'
 import { Routes, Route } from 'react-router-dom'
 import Register from './pages/Register'
+import EventsPage from './pages/EventsPage'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/events' element={<EventsPage />} />
         </Routes>
       </Container>
     </>

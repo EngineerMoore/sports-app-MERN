@@ -1,0 +1,19 @@
+#preview-thumbnail {
+  margin-bottom: 20px;
+  border: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+input#thumbnail {
+  display: none;
+}
+
+.thumbnail-container.has-thumbnail img {
+  display: none;
+}
