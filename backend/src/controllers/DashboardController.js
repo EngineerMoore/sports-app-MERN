@@ -20,7 +20,8 @@ module.exports = {
     const { sport } = req.params;
     // if no sport is listed, find({}) will return all events
       // produces routes: /dashboard/:sport & /dashboard/
-    const query = { sport } || {}
+    const query = sport ? { sport } : {}
+
     try {
 
       const events = await Event.find(query)
