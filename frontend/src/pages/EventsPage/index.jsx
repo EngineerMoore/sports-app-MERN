@@ -94,9 +94,6 @@ const EventsPage = () => {
                     Create Event
                 </Button>
             </Form>
-            {/* {errorMessage ? (
-                <Alert className="event-validation" color="danger"> Missing required information</Alert>
-            ) : ""} */}
         </Container>
   )
 }
