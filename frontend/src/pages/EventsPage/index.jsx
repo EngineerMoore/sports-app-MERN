@@ -31,7 +31,6 @@ const EventsPage = () => {
     eventData.append('price', price)
     eventData.append('date', date)
 
-    console.dir(eventData)
 
     if (thumbnail) {
       try {
