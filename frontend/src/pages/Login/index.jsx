@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Form, FormGroup, Input } from 'reactstrap';
-import Button from 'react-bootstrap/Button';
+import { Container, Form, FormGroup, Input, Button } from 'reactstrap';
+
 
 const Login = () => {
   const [ email, setEmail ] = useState('');
-  const [ password, setPassword ] = useState('')
+  const [ password, setPassword ] = useState('');
+  const [ error, setError ] = useState(false);
+  const [ errorMessage, setErrorMessage ] = useState('false');
 
   let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('result', email, password)
+
     const response = await fetch('http://localhost:8000/login', {
       method: 'POST',
       headers: {
@@ -27,13 +29,25 @@ const Login = () => {
     // Tip: I referenced my login controller to know what data I'll receive
     const userId = data._id || false;
 
-    if (userId) {
-       localStorage.setItem('user', userId)
-       navigate('/dashboard')
-    } else {
-      const { message } = data
-      console.log(message)
+
+    try {
+      if (userId) {
+         localStorage.setItem('user', userId)
+         navigate('/dashboard')
+      } else {
+        const { message } = data
+        setError(true)
+        setErrorMessage(message)
+        setTimeout( () => {
+          setError(false)
+          setErrorMessage('')
+        }, 2000)
+
+      }
+    } catch (error) {
+
     }
+
 
   }
 

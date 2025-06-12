@@ -1,8 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import {Alert} from 'react-bootstrap';
-import { Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Container, Form, FormGroup, Input, Label, Button, Alert } from 'reactstrap';
 import cameraIcon from '../../assets/camera.png'
 import './event.css'
 

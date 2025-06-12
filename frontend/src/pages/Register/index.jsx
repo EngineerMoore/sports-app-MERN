@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Form, FormGroup, Container, Input } from 'reactstrap';
-import Button from 'react-bootstrap/Button';
+import { Form, FormGroup, Container, Input, Button } from 'reactstrap';
 
 const Register = () => {
   const [ email, setEmail ] = useState('');
