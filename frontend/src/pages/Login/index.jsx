@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Form, FormGroup, Input, Button } from 'reactstrap';
+import { Container, Form, FormGroup, Input, Button, Alert } from 'reactstrap';
 
 
 const Login = () => {
@@ -45,7 +45,11 @@ const Login = () => {
 
       }
     } catch (error) {
-
+        setErrorMessage('Missing inputs')
+        setTimeout( () => {
+          setError(false)
+          setErrorMessage('')
+        }, 2000)
     }
 
 
@@ -56,16 +60,28 @@ const Login = () => {
         <h2>Login:</h2>
         <p>Please <strong>Login</strong> into your account</p>
         <Form onSubmit={handleSubmit}>
+          <div className='input-group'>
             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                <Input type="email" name="email" id="email" placeholder="Your email" onChange={evt => setEmail(evt.target.value)} />
+                <Input type="email" name="email" id="email" placeholder="Your email" onChange={evt => setEmail(evt.target.value)} required/>
             </FormGroup>
             <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                <Input type="password" name="password" id="password" placeholder="Your password" onChange={evt => setPassword(evt.target.value)} />
+                <Input type="password" name="password" id="password" placeholder="Your password" onChange={evt => setPassword(evt.target.value)} required/>
             </FormGroup>
-            <Button>
-              Submit
-            </Button>
+          </div>
+            <FormGroup>
+              <Button className='submit-btn'>
+                Submit
+              </Button>
+            </FormGroup>
+            <FormGroup>
+              <Button className='secondary-btn' onClick={() => navigate('/register')}>
+                New Account
+              </Button>
+            </FormGroup>
         </Form>
+        { error ? (
+          <Alert className='event-validation' color='danger'>{errorMessage}</Alert>
+        ) : ''}
     </Container>
   )
 }

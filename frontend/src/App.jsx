@@ -11,12 +11,14 @@ function App() {
     <>
       <Container>
         <h1>Sport's App</h1>
-        <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/events' element={<EventsPage />} />
-        </Routes>
+        <div className='content'>
+          <Routes>
+            <Route path='/' element={<Dashboard />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/events' element={<EventsPage />} />
+          </Routes>
+        </div>
       </Container>
     </>
   )
