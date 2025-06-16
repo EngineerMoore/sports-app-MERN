@@ -3,7 +3,7 @@ const User = require('../models/User')
 
 module.exports = {
   async createEvent(req, res) {
-    const { title, description, price, sport } = req.body;
+    const { title, description, price, sport, date } = req.body;
     // deconstructed variable must match received headers.
       // Ex. userId was undefined because userid was recieved in headers
     const { user_id } = req.headers;
@@ -19,6 +19,7 @@ module.exports = {
       title,
       description,
       sport,
+      date,
       price: parseFloat(price),
       user: user_id,
       thumbnail: filename
