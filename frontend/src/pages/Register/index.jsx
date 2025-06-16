@@ -47,11 +47,12 @@ const Register = () => {
         }, 2000)
       }
     } catch (error) {
-        setErrorMessage('Missing inputs')
-        setTimeout( () => {
-          setError(false)
-          setErrorMessage('')
-        }, 2000)
+      setError(true);
+      setErrorMessage('Missing inputs');
+      setTimeout( () => {
+        setError(false);
+        setErrorMessage('');
+      }, 2000);
     }
 
 

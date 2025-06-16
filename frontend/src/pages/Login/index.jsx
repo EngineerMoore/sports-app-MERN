@@ -36,20 +36,21 @@ const Login = () => {
          navigate('/dashboard')
       } else {
         const { message } = data
-        setError(true)
-        setErrorMessage(message)
+        setError(true);
+        setErrorMessage(message);
         setTimeout( () => {
-          setError(false)
-          setErrorMessage('')
-        }, 2000)
+          setError(false);
+          setErrorMessage('');
+        }, 2000);
 
       }
     } catch (error) {
-        setErrorMessage('Missing inputs')
-        setTimeout( () => {
-          setError(false)
-          setErrorMessage('')
-        }, 2000)
+      setError(true);
+      setErrorMessage('Missing inputs');
+      setTimeout( () => {
+        setError(false);
+        setErrorMessage('');
+      }, 2000);
     }
 
 
