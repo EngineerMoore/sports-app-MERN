@@ -1,6 +1,18 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from 'react-router-dom';
-import { Container, Form, FormGroup, Input, Label, Button, Alert } from 'reactstrap';
+import {
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Button,
+  Alert, 
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+ } from 'reactstrap';
 import cameraIcon from '../../assets/camera.png'
 import './event.css'
 
@@ -10,12 +22,17 @@ const EventsPage = () => {
   const [description, setDescription ] = useState('');
   const [price, setPrice] = useState('');  
   const [thumbnail, setThumbnail] = useState(null);
-  const [sport, setSport] = useState('');
+  const [sport, setSport] = useState('Select Sport');
   const [date, setDate] = useState('');
   const [uploadAlert, setUploadAlert] = useState('');
+  const [sportAlert, setSportAlert] = useState('');
   const [successAlert, setSuccessAlert] = useState('');
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   let navigate = useNavigate();
+
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   const preview = useMemo(() => {
     return thumbnail ? URL.createObjectURL(thumbnail) : null;
@@ -26,15 +43,15 @@ const EventsPage = () => {
     const user_id = localStorage.getItem('user');
 
     const eventData = new FormData();
-    eventData.append('thumbnail', thumbnail)
-    eventData.append('sport', sport)
-    eventData.append('title', title)
-    eventData.append('description', description)
-    eventData.append('price', price)
-    eventData.append('date', date)
+    eventData.append('thumbnail', thumbnail);
+    eventData.append('sport', sport);
+    eventData.append('title', title);
+    eventData.append('description', description);
+    eventData.append('price', price);
+    eventData.append('date', date);
 
 
-    if (thumbnail) {
+    if (thumbnail && sport !== 'Select Sport') {
       try {
         const response = await fetch('http://localhost:8000/event', {
           method: 'POST',
@@ -50,7 +67,7 @@ const EventsPage = () => {
         setSuccessAlert('Event successfully created!');
         setTimeout(() => setSuccessAlert(''), 2000);
         setThumbnail(null);
-        setSport('');
+        setSport('Select Sport');
         setTitle('');
         setDescription('');
         setPrice('');
@@ -59,9 +76,15 @@ const EventsPage = () => {
         console.error(error);
       }
     } else {
-      setUploadAlert(`Upload Event Thumbnail`)
+      if (!thumbnail) setUploadAlert(`Upload Event Thumbnail`);
+      if (sport === 'Select Sport') setSportAlert('Select Sport');
     }
   
+  }
+
+  const sportEventHandler = (sportInput) => {
+    setSport(sportInput);
+    setSportAlert('');
   }
   return (
         <Container>
@@ -81,8 +104,16 @@ const EventsPage = () => {
             {uploadAlert ? <Alert color="danger">{uploadAlert}</Alert> : ''}
             <FormGroup>
               <Label>Sport: </Label>
-              <Input id="sport" type="text" value={sport} placeholder={'Sport Name'} onChange={(evt) => setSport(evt.target.value)} required/>
+              <Dropdown id="sport" isOpen={dropdownOpen} toggle={toggle}>
+                <DropdownToggle caret value={sport}>{sport}</DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => sportEventHandler('running')}>Running</DropdownItem>
+                  <DropdownItem onClick={() => sportEventHandler('cycling')}>Cycling</DropdownItem>
+                  <DropdownItem onClick={() => sportEventHandler('swimming')}>Swimming</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </FormGroup>
+            {sportAlert ? <Alert color="danger">{sportAlert}</Alert> : ''}
             <FormGroup>
               <Label>Title: </Label>
               <Input id="title" type="text" value={title} placeholder={'Event Title'} onChange={(evt) => setTitle(evt.target.value)} required/>
