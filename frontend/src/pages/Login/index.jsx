@@ -14,6 +14,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+
     const response = await fetch('http://localhost:8000/login', {
       method: 'POST',
       headers: {
@@ -27,13 +28,15 @@ const Login = () => {
 
     const data = await response.json();
     // Tip: I referenced my login controller to know what data I'll receive
-    const userId = data._id || false;
-
-
+    const userId = data.user_id || false;
+    const user = data.user || false;
+        
     try {
-      if (userId) {
-         localStorage.setItem('user', userId)
-         navigate('/dashboard')
+      if (user && userId) {
+         localStorage.setItem('user_id', userId)
+         localStorage.setItem('user', user)
+
+         navigate('/')
       } else {
         const { message } = data
         setError(true);

@@ -40,7 +40,7 @@ const EventsPage = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();  
-    const user_id = localStorage.getItem('user');
+    const user_id = localStorage.getItem('user_id');
 
     const eventData = new FormData();
     eventData.append('thumbnail', thumbnail);

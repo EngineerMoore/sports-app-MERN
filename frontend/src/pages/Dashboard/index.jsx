@@ -11,7 +11,8 @@ const Dashboard = () => {
   const [rSelected, setRSelected] = useState(null);
   const [successAlert, setSuccessAlert] = useState('');
   const [deletionAlert, setDeletionAlert] = useState('');
-  const user_id = localStorage.getItem('user');
+  const user = localStorage.getItem('user');
+  const user_id = localStorage.getItem('user_id');
 
   let navigate = useNavigate()
 
@@ -30,7 +31,7 @@ const Dashboard = () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        user_id
+        user_id : user_id
       }
     });
 
@@ -43,14 +44,11 @@ const Dashboard = () => {
 
     const url = filter ? `${api}/dashboard/${filter}` : `${api}/dashboard`;
     const response = await fetch(`${url}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        user_id
-      }
+      method: 'GET'
     });
     const allEvents = await response.json();
 
+    console.log(allEvents[0])
     setEvents(allEvents)
 
   }
