@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -27,8 +27,13 @@ const EventsPage = () => {
   const [uploadAlert, setUploadAlert] = useState('');
   const [sportAlert, setSportAlert] = useState('');
   const [successAlert, setSuccessAlert] = useState('');
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const user = localStorage.getItem('user');
+
+  useEffect(() => {
+    if (!user) navigate('/login')
+  }, [])
 
   let navigate = useNavigate();
 
@@ -40,7 +45,7 @@ const EventsPage = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();  
-    const user_id = localStorage.getItem('user_id');
+    
 
     const eventData = new FormData();
     eventData.append('thumbnail', thumbnail);
@@ -57,13 +62,12 @@ const EventsPage = () => {
           method: 'POST',
           // 'content-type: application/json' not necessary when using form data
           headers: {
-            user_id
+            user
           },
           // stringify not necessary with form data
           body: eventData
         })
 
-        const data = response.json();
         setSuccessAlert('Event successfully created!');
         setTimeout(() => setSuccessAlert(''), 2000);
         setThumbnail(null);

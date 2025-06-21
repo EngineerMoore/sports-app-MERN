@@ -26,38 +26,53 @@ const Dashboard = () => {
   }
 
   const myEventsHandler = async () => {
-    setRSelected('myEvents');
-    const response = await fetch(`${api}/user/events`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        user_id : user_id
-      }
-    });
+    try {
+      setRSelected('myEvents');
+      const response = await fetch(`${api}/user/events`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          user
+        }  
+      });
 
-    const userEvents = await response.json();
-    setEvents(userEvents);
+      const userEventsObject = await response.json();
+      setEvents(userEventsObject.events);
+    } catch (error) {
+      navigate('/login');
+    }
+
     
   }
 
   const getEvents = async(filter) => {
+    try {
+      const url = filter ? `${api}/dashboard/${filter}` : `${api}/dashboard`;
+      const response = await fetch(`${url}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          user
+        }
+      });
+      const allEventsObject = await response.json();
 
-    const url = filter ? `${api}/dashboard/${filter}` : `${api}/dashboard`;
-    const response = await fetch(`${url}`, {
-      method: 'GET'
-    });
-    const allEvents = await response.json();
+      setEvents(allEventsObject.events);
+    } catch (error) {
+      navigate('/login');
+    }
 
-    console.log(allEvents[0])
-    setEvents(allEvents)
 
   }
 
   const deleteEventHandler = async (event) => {
-
     try {
       const deleteEvent = await fetch(`${api}/event/${event.id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          user
+        }
       })
       
       filterHandler(null);

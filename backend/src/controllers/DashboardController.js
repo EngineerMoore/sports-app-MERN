@@ -1,49 +1,66 @@
 const Event = require('../models/Event');
+const jwt = require('jsonwebtoken');
+
+// jwt.verify checks if the token and secret 
 
 module.exports = {
-   async getEventById(req, res) {
-    const { eventId } = req.params;
-
-    try {
-      const event = await Event.findById(eventId);
-      return res.json(event)
-    } catch (error) {
-      
-      return res.status(400).json({
-        message:
-          'Event does not exist. Would you like to create a new event?'
-      })
-    }
+  getEventById(req, res) {
+    jwt.verify(req.token, 'secret', async(err, authData) => {
+      if (err) {
+        res.sendStatus(401);
+      } else {
+        const { eventId } = req.params;
+        try {
+          const event = await Event.findById(eventId);
+          return res.json({ authData, event })
+        } catch (error) {
+          
+          return res.status(400).json({
+            message:
+              'Event does not exist. Would you like to create a new event?'
+          })
+        }
+      }
+    })
   },
 
-  async getAllEvents(req, res) {
-    const { sport } = req.params;
-    // if no sport is listed, find({}) will return all events
-      // produces routes: /dashboard/:sport & /dashboard/
-    const query = sport ? { sport } : {}
+  getAllEvents(req, res) {
+    jwt.verify(req.token, 'secret', async(err, authData) => {
+      if (err) {
+        res.sendStatus(401);
+      } else {
+        const { sport } = req.params;
+        // if no sport is listed, find({}) will return all events
+          // produces routes: /dashboard/:sport & /dashboard/
+        const query = sport ? { sport } : {}
 
-    try {
+        try {
 
-      const events = await Event.find(query)
-      return res.json(events);
-    } catch (error) {
-      return res.status(400).json({
-        message: `No events found`
-      })
-    }
+          const events = await Event.find(query)
+          return res.json({ authData, events });
+        } catch (error) {
+          return res.status(400).json({
+            message: `No events found`   
+          })
+        }
+      }
+    })
   },
 
   async getEventsByUserId(req, res) {
-    const { user_id } = req.headers;
-
-    try {
-
-      const events = await Event.find({ user: user_id })
-      return res.json(events);
-    } catch (error) {
-      return res.status(400).json({
-        message: `No events found for user ${user_id}`
-      })
-    }
+    jwt.verify(req.token, 'secret', async(err, authData) => {
+      if (err) {
+        res.sendStatus(401);
+      } else {
+        try {
+            const events = await Event.find({ user: authData.user._id });
+            return res.json({ authData, events});
+          } catch (error) {
+            return res.status(400).json({
+              message: `No events found for user ${authData.user._id}`
+            });
+          }
+        }
+    });
   }
 }

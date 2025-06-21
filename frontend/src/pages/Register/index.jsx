@@ -30,11 +30,13 @@ const Register = () => {
 
     const data = await response.json();
     // Tip: I referenced my login controller to know what data I'll receive
-    const userId = data._id || false;
+    const user = data.user || false;
+    const userId = data.user_id || false;
 
     try {
-      if (userId) {
-        localStorage.setItem('user', userId)
+      if (user && userId) {
+        localStorage.setItem('user', user)
+        localStorage.setItem('user_id', userId)
         navigate('/')
       } else {
         const { message } = data
