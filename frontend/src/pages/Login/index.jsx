@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Form, FormGroup, Input, Button, Alert } from 'reactstrap';
+import { UserContext } from '../../user-context';
 
 
 const Login = () => {
+  const { isLoggedIn, setIsLoggedIn } = useContext(UserContext);
   const [ email, setEmail ] = useState('');
   const [ password, setPassword ] = useState('');
   const [ error, setError ] = useState(false);
@@ -33,10 +35,10 @@ const Login = () => {
         
     try {
       if (user && userId) {
-         localStorage.setItem('user_id', userId)
-         localStorage.setItem('user', user)
-
-         navigate('/')
+        localStorage.setItem('user_id', userId);
+        localStorage.setItem('user', user);
+        setIsLoggedIn(true);
+        navigate('/')
       } else {
         const { message } = data
         setError(true);
