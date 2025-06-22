@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import api from '../../services/api';
-import { Alert, Button, ButtonGroup } from 'reactstrap';
+import { Alert, Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownToggle } from 'reactstrap';
 import socketio from 'socket.io-client';
 import './dashboard.css';
 
@@ -14,10 +14,14 @@ const Dashboard = () => {
   const [deletionAlert, setDeletionAlert] = useState('');
   const [messageHandler, setMessageHandler] = useState('');
   const [eventRequests, setEventRequests] = useState([]);
+  const[dropdownOpen, setDropdownOpen] = useState(false);
+
   const user = localStorage.getItem('user');
   const user_id = localStorage.getItem('user_id');
 
   let navigate = useNavigate()
+
+  const toggle = () => setDropdownOpen(!dropdownOpen)
 
   useEffect(() => {
     getEvents();
@@ -95,11 +99,7 @@ const Dashboard = () => {
     }
   }
 
-  const logoutHandler = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('user_id');
-    navigate('/login');
-  }
+
 
   const registrationRequestHandler = async (event) => {
     try {
@@ -120,7 +120,6 @@ const Dashboard = () => {
     <>
       <ul className='notifications'>
       {eventRequests.map( request => {
-        console.log(request)
         return (
           <li key={request._id}>
             <div>
@@ -136,17 +135,18 @@ const Dashboard = () => {
       })}
       </ul>
       <div className='filter-panel'>
-        <ButtonGroup>
-          <Button color="primary" onClick={() => filterHandler(null)} active={rSelected === null}>All Sports</Button>
-          <Button color="primary" onClick={myEventsHandler} active={rSelected === 'myEvents'}>My Events</Button>
-          <Button color="primary" onClick={() => filterHandler('running')} active={rSelected === 'running'}>Running</Button>
-          <Button color="primary" onClick={() => filterHandler('cycling')} active={rSelected === 'cylcing'}>Cycling</Button>
-          <Button color="primary" onClick={() => filterHandler('swimming')} active={rSelected === 'swimming'}>Swimming</Button>
-        </ButtonGroup>
-        <ButtonGroup>
-          <Button color="secondary" onClick={() => navigate('/events')}>Create Event</Button>
-          <Button color="danger" onClick={logoutHandler}>Logout</Button>
-        </ButtonGroup>
+        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+          <DropdownToggle color="primary" caret>
+            Filter
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem onClick={() => filterHandler(null)} active={rSelected === null}>All Sports</DropdownItem>
+            <DropdownItem onClick={myEventsHandler} active={rSelected === 'myEvents'}>My Events</DropdownItem>
+            <DropdownItem onClick={() => filterHandler('running')} active={rSelected === 'running'}>Running</DropdownItem>
+            <DropdownItem onClick={() => filterHandler('cycling')} active={rSelected === 'cylcing'}>Cycling</DropdownItem>
+            <DropdownItem onClick={() => filterHandler('swimming')} active={rSelected === 'swimming'}>Swimming</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
       </div>
       {successAlert ? <Alert color='success'>{successAlert}</Alert> : ''}
       <ul className='events-list'>
