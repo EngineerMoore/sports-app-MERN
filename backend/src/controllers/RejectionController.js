@@ -1,21 +1,29 @@
 const Registration = require('../models/Registration');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
-  async rejection(req, res) {
-    const { registration_id } = req.params;
+  rejection(req, res) {
+        jwt.verify(req.token, 'secret', async(err) => {
+          if (err) {
 
-    try {
-      const registration = await Registration.findById(registration_id);
-  
-      registration.approved = false;
-  
-      await registration.save();
+          } else {
+            const { registration_id } = req.params;
 
-      return res.json(registration)
-      
-    } catch (error) {
-      return res.status(400).json(error)
-    }
+            try {
+              const registration = await Registration.findById(registration_id);
+          
+              registration.approved = false;
+          
+              await registration.save();
+
+              return res.json(registration)
+              
+            } catch (error) {
+              return res.status(400).json(error)
+            }
+          }
+        })  
+
 
   }
 }

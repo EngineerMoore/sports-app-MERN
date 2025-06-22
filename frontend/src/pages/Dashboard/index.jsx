@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [messageHandler, setMessageHandler] = useState('');
   const [eventRequests, setEventRequests] = useState([]);
   const[dropdownOpen, setDropdownOpen] = useState(false);
+  const[eventRequestSuccessAlert, setEventRequestSuccessAlert] = useState('');
 
   const user = localStorage.getItem('user');
   const user_id = localStorage.getItem('user_id');
@@ -111,24 +112,65 @@ const Dashboard = () => {
         }
       })
     } catch (error) {
-      
+      console.error(error)
     }
 
   }
 
+  const acceptEventHandler = async (eventId) => {
+    try {
+      const response = await fetch(`${api}/registration/${eventId}/approvals`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          user
+        }
+      })
+
+      setEventRequestSuccessAlert('Registration Request Accepted')
+      setTimeout(() => {
+        setEventRequestSuccessAlert('')
+      },2500)
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+    const rejectEventHandler = async (eventId) => {
+    try {
+      const response = await fetch(`${api}/registration/${eventId}/rejections`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          user
+        }
+      })
+
+      setEventRequestSuccessAlert('Registration Request Rejected')
+      setTimeout(() => {
+        setEventRequestSuccessAlert('')
+      },2500)
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <>
+      {eventRequestSuccessAlert ? <div><Alert color="success">{eventRequestSuccessAlert}</Alert></div> : ''}
       <ul className='notifications'>
       {eventRequests.map( request => {
         return (
           <li key={request._id}>
             <div>
-              <strong>{request.user.email}</strong> Is requesting to register to your Event:
+              <strong>{request.user.email}</strong> Is requesting to register to your Event: 
               <strong>{request.event.title}</strong>
             </div>
               <ButtonGroup>
-                <Button color='secondary' onClick={() => {}}>Accept</Button>
-                <Button color='danger' onClick={() => {}}>Cancel</Button>
+                <Button color='secondary' onClick={() => {acceptEventHandler(request._id)}}>Accept</Button>
+                <Button color='danger' onClick={() => {rejectEventHandler(request._id)}}>Reject</Button>
               </ButtonGroup>
           </li>
         )
