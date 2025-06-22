@@ -128,9 +128,10 @@ const Dashboard = () => {
       })
 
       setEventRequestSuccessAlert('Registration Request Accepted')
+      removeDashboardNotification(eventId);
       setTimeout(() => {
         setEventRequestSuccessAlert('')
-      },2500)
+      },2000)
 
     } catch (error) {
       console.error(error)
@@ -148,13 +149,19 @@ const Dashboard = () => {
       })
 
       setEventRequestSuccessAlert('Registration Request Rejected')
+      removeDashboardNotification(eventId);
       setTimeout(() => {
         setEventRequestSuccessAlert('')
-      },2500)
+      },2000)
 
     } catch (error) {
       console.error(error)
     }
+  }
+
+  const removeDashboardNotification = (eventId) => {
+    const newEvents = eventRequests.filter(event => event._id !== eventId);
+    setEventRequests(newEvents)
   }
 
   return (
