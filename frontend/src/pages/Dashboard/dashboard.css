@@ -36,6 +36,16 @@ ul.events-list header div {
   display: flex;
   flex-direction: row-reverse;
 }
+ul.notifications {
+  list-style: none;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+ul.notifications li {
+  font-size: 18px;
+  line-height: 24px;
+}
 
 @media (max-width: 768px){
   ul.events-list {

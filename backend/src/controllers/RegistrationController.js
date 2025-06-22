@@ -1,22 +1,34 @@
 const Registration = require('../models/Registration');
+const jwt = require('jsonwebtoken');
 
 module.exports = {
-  async create(req, res) {
-    const { user_id } = req.headers;
-    const { eventId } = req.params;
-    const { date } = req.body;
+  create(req, res) {
+    jwt.verify(req.token, 'secret', async (err, authData) => {
+      if (err) {
+        res.sendStatus(401);
+      } else {
+        const user_id = authData.user._id;
+        const { eventId } = req.params;
+        
+        const registration = await Registration.create({
+          user: user_id,
+          event: eventId,
+        })
+        
+        // populate shows value details, select:'-key' hides property (password is excluded from response)
+        await registration.populate(["event", {path:"user", select:'-password'}]);
+        
+        await registration.event.populate([{path: "user", select:"-password" }])
 
-    const registration = await Registration.create({
-      user: user_id,
-      event: eventId,
-      date
+        const ownerSocket = req.connectedUsers[registration.event.user._id];
+
+        if (ownerSocket) {
+          req.io.to(ownerSocket).emit('registration_request', registration)
+        }
+          
+        return res.json(registration)
+      }
     })
-    
-    // populate shows value details, select:'-key' hides property (password is excluded from response)
-    await registration
-      .populate(["event", {path:"user", select:'-password'}]);
-      
-    return res.json(registration)
   },
 
   async getRegistration(req, res) {

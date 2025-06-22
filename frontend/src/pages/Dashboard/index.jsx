@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import api from '../../services/api';
 import { Alert, Button, ButtonGroup } from 'reactstrap';
-import './dashboard.css'
+import socketio from 'socket.io-client';
+import './dashboard.css';
 
 const Dashboard = () => {
   const [events, setEvents] = useState([]);
@@ -11,6 +12,8 @@ const Dashboard = () => {
   const [rSelected, setRSelected] = useState(null);
   const [successAlert, setSuccessAlert] = useState('');
   const [deletionAlert, setDeletionAlert] = useState('');
+  const [messageHandler, setMessageHandler] = useState('');
+  const [eventRequests, setEventRequests] = useState([]);
   const user = localStorage.getItem('user');
   const user_id = localStorage.getItem('user_id');
 
@@ -20,6 +23,14 @@ const Dashboard = () => {
     getEvents();
   }, [])
 
+  const socket = useMemo(() => {
+    return socketio('http://localhost:8000', { query: { user: user_id } })
+  }, [user_id]);
+
+  useEffect(() => {
+    socket.on('registration_request', data => (setEventRequests([...eventRequests, data])))
+  }, [eventRequests, socket])
+  
   const filterHandler = (query) => {
     setRSelected(query);
     getEvents(query)
@@ -84,8 +95,46 @@ const Dashboard = () => {
     }
   }
 
+  const logoutHandler = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('user_id');
+    navigate('/login');
+  }
+
+  const registrationRequestHandler = async (event) => {
+    try {
+      fetch(`${api}/registration/${event.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          user
+        }
+      })
+    } catch (error) {
+      
+    }
+
+  }
+
   return (
     <>
+      <ul className='notifications'>
+      {eventRequests.map( request => {
+        console.log(request)
+        return (
+          <li key={request._id}>
+            <div>
+              <strong>{request.user.email}</strong> Is requesting to register to your Event:
+              <strong>{request.event.title}</strong>
+            </div>
+              <ButtonGroup>
+                <Button color='secondary' onClick={() => {}}>Accept</Button>
+                <Button color='danger' onClick={() => {}}>Cancel</Button>
+              </ButtonGroup>
+          </li>
+        )
+      })}
+      </ul>
       <div className='filter-panel'>
         <ButtonGroup>
           <Button color="primary" onClick={() => filterHandler(null)} active={rSelected === null}>All Sports</Button>
@@ -94,7 +143,10 @@ const Dashboard = () => {
           <Button color="primary" onClick={() => filterHandler('cycling')} active={rSelected === 'cylcing'}>Cycling</Button>
           <Button color="primary" onClick={() => filterHandler('swimming')} active={rSelected === 'swimming'}>Swimming</Button>
         </ButtonGroup>
-        <Button color="primary" onClick={() => navigate('/events')}>Create Event</Button>
+        <ButtonGroup>
+          <Button color="secondary" onClick={() => navigate('/events')}>Create Event</Button>
+          <Button color="danger" onClick={logoutHandler}>Logout</Button>
+        </ButtonGroup>
       </div>
       {successAlert ? <Alert color='success'>{successAlert}</Alert> : ''}
       <ul className='events-list'>
@@ -118,7 +170,7 @@ const Dashboard = () => {
             <span>Event Date: {`${dayjs(event.date).format('MM/DD/YYYY')}`}</span>
             <span> Event Price: ${parseFloat(event.price).toFixed(2)}</span>
             <span>Event Description: {event.description}</span>
-            <Button color='primary'>Subscribe</Button>
+            <Button color='primary' onClick={() => registrationRequestHandler(event)}>Registration Request</Button>
           </li>
         )}
       </ul>
