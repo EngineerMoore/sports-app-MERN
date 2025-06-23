@@ -4,6 +4,7 @@ import { Container } from 'reactstrap'
 import { Routes, Route } from 'react-router-dom'
 import Register from './pages/Register'
 import EventsPage from './pages/EventsPage'
+import MyRegistrations from './pages/MyRegistrations'
 import TopNav from './components/TopNav'
 import { ContextWrapper } from './user-context'
 import './App.css'
@@ -18,6 +19,7 @@ function App() {
             <TopNav />
             <Routes>
               <Route path='/' element={<Dashboard />} />
+              <Route path='/myregistrations' element={<MyRegistrations />} />
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
               <Route path='/events' element={<EventsPage />} />
