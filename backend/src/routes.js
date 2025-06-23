@@ -28,6 +28,7 @@ routes.get('/status', (req, res) => {
 routes.post('/registration/:eventId', verifyToken, RegistrationContoller.create)
 routes.post('/registration/:registration_id/approvals', verifyToken, ApprovalContoller.approval)
 routes.post('/registration/:registration_id/rejections', verifyToken, RejectionContoller.rejection)
+routes.get('/registration', verifyToken, RegistrationContoller.getMyRegistrations)
 routes.get('/registration/:registration_id', RegistrationContoller.getRegistration)
 
 //Login
