@@ -138,7 +138,7 @@ const Dashboard = () => {
     }
   }
 
-    const rejectEventHandler = async (eventId) => {
+  const rejectEventHandler = async (eventId) => {
     try {
       const response = await fetch(`${api}/registration/${eventId}/rejections`, {
         method: 'POST',
