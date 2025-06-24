@@ -20,12 +20,14 @@ module.exports = {
         
         await registration.event.populate([{path: "user", select:"-password" }])
 
-        registration.owner = registration.event.user;
-        registration.eventTitle = registration.event.eventTitle;
+        registration.owner = registration.event.user._id;
+        registration.eventTitle = registration.event.title;
         registration.eventPrice = registration.event.price;
         registration.eventDate = registration.event.date;
         registration.userEmail = registration.user.email;
-        registration.save()
+        registration.save();
+
+        
 
         const ownerSocket = req.connectedUsers[registration.event.user._id];
 
@@ -64,7 +66,7 @@ module.exports = {
           const registrationArr = await Registration.find({ "owner" : authData.user._id })
           return res.json(registrationArr)
         } catch  (error) {
-          res.status
+          res.status(400)
         }
       }
     })
