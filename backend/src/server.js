@@ -1,3 +1,9 @@
+// dotenv must come before any files requiring env variables
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
 const express = require('express');
 /* mongoose is ODM for MongoDB */
 const mongoose = require('mongoose');
@@ -20,9 +26,7 @@ const io = socketio(server, {
 
 
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
+
 
 try {
   // connects to the external db

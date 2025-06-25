@@ -12,7 +12,7 @@ module.exports = {
             // deconstructed variable must match received headers.
               // Ex. userId was undefined because userid was recieved in headers
             const { user_id } = req.headers;
-            const { filename } = req.file;
+            const { location } = req.file;
 
             const user = await User.findById(authData.user._id);
 
@@ -27,7 +27,7 @@ module.exports = {
               date,
               price: parseFloat(price),
               user,
-              thumbnail: filename
+              thumbnail: location
             })
 
             return res.json(event);
